@@ -16,20 +16,20 @@ class Database:
     def create_tables(self):
         self.cur.execute('''CREATE TABLE users (id INTEGER NOT NULL AUTO_INCREMENT, usuario VARCHAR(20) NOT NULL, senha VARCHAR(20) NOT NULL, email VARCHAR(50), PRIMARY KEY (id))''')
         self.cur.execute('''CREATE TABLE cars (id INTEGER NOT NULL AUTO_INCREMENT, usuario VARCHAR(20) NOT NULL, marca VARCHAR(20) NOT NULL, modelo VARCHAR(20) NOT NULL, VIN VARCHAR(20) NOT NULL, PRIMARY KEY (id))''')
-        self.cur.execute('''CREATE TABLE cars_data (id INTEGER NOT NULL AUTO_INCREMENT, VIN VARCHAR(20) NOT NULL, speed VARCHAR(20) NOT NULL, rpm VARCHAR(20) NOT NULL, coolant_temp VARCHAR(20) NOT NULL, engine_load VARCHAR(20) NOT NULL, intake_pressure VARCHAR(20) NOT NULL))''')
+        self.cur.execute('''CREATE TABLE cars_data (id INTEGER NOT NULL AUTO_INCREMENT, VIN VARCHAR(20) NOT NULL, speed VARCHAR(20) NOT NULL, rpm VARCHAR(20) NOT NULL, coolant_temp VARCHAR(20) NOT NULL, engine_load VARCHAR(20) NOT NULL, intake_pressure VARCHAR(20) NOT NULL, PRIMARY KEY (id))''')
         return "Tabelas criadas"
-
+	
     def insert_users(self, usuario, senha, email):
         query = f'''INSERT INTO users (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'''
         self.cur.execute(query)
         self.con.commit()
-        return "Usuario inserido"
+        return "Usuario inserido"	
 
     def insert_cars(self, usuario, marca, modelo, VIN):
         query = f'''INSERT INTO cars (usuario, marca, modelo, VIN) VALUES ("{usuario}", "{marca}", "{modelo}", "{VIN}")'''
         self.cur.execute(query)
         self.con.commit()
-        return "Carro inserido" 
+        return "Carro inserido"	
 
     def insert_cars_data(self, VIN, speed, rpm, coolant_temp, engine_load, intake_pressure):
         query = f'''INSERT INTO cars_data (VIN, speed, rpm, coolant_temp, engine_load, intake_pressure) VALUES ("{VIN}", "{speed}", "{rpm}", "{coolant_temp}", "{engine_load}", "{intake_pressure}")'''
@@ -40,14 +40,14 @@ class Database:
     def get_users(self):
         self.cur.execute('''SELECT usuario FROM users''')
         result = self.cur.fetchall()
-        return result   
-
+        return result	
+	
     def get_password(self, usuario):
 
         self.cur.execute(f'''SELECT senha FROM users WHERE usuario="{usuario}"''')
         result = self.cur.fetchall()
         return result
-
+	
     def get_cars(self, usuario):
         self.cur.execute(f'''SELECT * FROM cars WHERE usuario="{usuario}"''')
         result = self.cur.fetchall()
@@ -59,14 +59,14 @@ class Database:
         return result
 
     def get_data(self, VIN):
-       self.cur.execute(f'''SELECT * FROM cars_data WHERE VIN="{VIN}"''')
+        self.cur.execute(f'''SELECT * FROM cars_data WHERE VIN="{VIN}"''')
         result = self.cur.fetchall()
         return result
 
 app = Flask(__name__)
 db = Database()
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def login_page():
     # db.create_tables()
     error = None
@@ -80,7 +80,7 @@ def login_page():
             if user["usuario"] == usuario:
                 if senha == db.get_password(usuario)[0]["senha"]:
                     return jsonify({'result' : "Usuario aprovado"}), 200
-
+            
                 else:
                     error = "Senha incorreta"
             else:
@@ -89,14 +89,15 @@ def login_page():
 
     return render_template('login.html', msg=msg)
 
+
 @app.route('/api/register', methods=['POST', 'GET'])
-    def register_page():
+def register_page():
     print("request /api/register")
     msg = 'Alou'
     error = None
 
     if request.method == 'POST' and 'usuario' in request.form and 'senha' in request.form and 'email' in request.form:
-        print("request POST")
+        print("POST /api/register")
         usuario = request.form['usuario']
         senha = request.form['senha']
         email = request.form['email']
@@ -108,15 +109,42 @@ def login_page():
                 error = "Usuario ja cadastrado"
                 return jsonify({'result' : error}), 400
 
+        
+        print(db.insert_users(usuario, senha, email))
+        return jsonify({'result' : "Usuario cadastrado com sucesso"}), 200
+            
+    elif request.method == 'POST':
+        msg = 'Preencha todos os campos!'
+       
+    return render_template('cadastro.html', msg=msg)
 
-            print(db.insert_users(usuario, senha, email))
 
-            return jsonify({'result' : "Usuario cadastrado com sucesso"}), 200
+@app.route('/carros/cadastro', methods=['POST', 'GET'])
+def register_car():
+    usuario = request.form['usuario'] #fazer com request.args
+    msg = ''
+    error = None
 
-        elif request.method == 'GET':
-            msg = 'Preencha todos os campos!'
+    if request.method == 'POST' and 'marca' in request.form and 'modelo' in request.form and 'VIN' in request.form:
+        marca = request.form['marca']
+        modelo = request.form['modelo']
+        VIN = request.form['VIN']
+        VINs = db.get_VIN(VIN)
+        print (VINs)
 
-        return render_template('register.html', msg=msg)
+        for numero in VINs:
+            if numero["VIN"] == VIN:
+                error = "Carro ja cadastrado"
+                return jsonify({'result' : error}), 400
+
+        db.insert_cars(usuario, marca, modelo, VIN)
+        return jsonify({'result' : "Carro cadastrado com sucesso"}), 200
+        
+    elif request.method == 'POST':
+        msg = 'Preencha todos os campos!'
+    
+    return render_template('carros.html', msg=msg)
+
 
 @app.route('/carros', methods=['GET'])
 def show_cars():
@@ -147,7 +175,7 @@ def show_data():
     else: 
         return jsonify({'message' : 'No data provided'}), 400
 
-
+            
     #usuario = request.form['usuario'] #fazer com request.args
     # VIN2 = request.form['VIN'] #fazer com request.args
 
