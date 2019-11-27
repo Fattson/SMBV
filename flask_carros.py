@@ -118,7 +118,7 @@ def register_page():
         msg = 'Preencha todos os campos!'
        
         return render_template('register.html', msg=msg)
-
+    return(500)
 
 @app.route('/carros/cadastro', methods=['POST', 'GET'])
 def register_car():
