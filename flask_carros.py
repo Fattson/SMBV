@@ -93,6 +93,7 @@ def login_page():
 @app.route('/api/register', methods=['POST', 'GET'])
 def register_page():
     print("request /api/register")
+    print(request)
     msg = 'Alou'
     error = None
 
