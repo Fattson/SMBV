@@ -113,10 +113,10 @@ def register_page():
         print(db.insert_users(usuario, senha, email))
         return jsonify({'result' : "Usuario cadastrado com sucesso"}), 200
             
-    elif request.method == 'POST':
+    elif request.method == 'GET':
         msg = 'Preencha todos os campos!'
        
-    return render_template('cadastro.html', msg=msg)
+        return render_template('register.html', msg=msg)
 
 
 @app.route('/carros/cadastro', methods=['POST', 'GET'])
@@ -181,4 +181,4 @@ def show_data():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port="3000")
+    app.run(host='localhost', port="3000")
