@@ -70,11 +70,11 @@ db = Database()
 def login_page():
     # db.create_tables()
     error = None
-    msg = ["Felipe", "Batatão"]
+    msg = ["oi"]
 
     if request.method == 'POST': 
-        usuario = request.form['usuario'] 
-        senha = request.form['senha']
+        usuario = request.json['usuario'] 
+        senha = request.json['senha']
         usuarios = db.get_users()
         for user in usuarios:
             if user["usuario"] == usuario:
@@ -87,7 +87,7 @@ def login_page():
                 error = "Usuario nao cadastrado"
         return jsonify({'result' : error}), 400
 
-    return render_template('login.html', msg=msg)
+    return render_template('index.html', msg=msg)
 
 
 @app.route('/api/register', methods=['POST', 'GET'])
