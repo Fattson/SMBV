@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Hello Bulma!</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+		<div class="container">
+	<section class="section">
+		<div class="columns">
+		<div class="columns is-half is-offset-one-quarter">
+			<div class="container">
+				<h1 class="title">
+					Bem vindo ao SMBV
+				</h1>
+				<p class="subtitle">
+					Sistema de <strong>Monitoramento</strong> Veicular!
+				</p>
+			</div>
+		</div></div>
+		<form action="/" method="POST">
+			<div class="field is-grouped">
+				<p class="control is-expanded">
+					<input class="input" type="text" placeholder="Fabricante" name="fabricante">
+				</p>
+				<p class="control is-expanded">
+					<input class="input" type="text" placeholder="Modelo" name="modelo">
+				</p>
+				<p class="control is-expanded">
+					<input class="input" type="text" placeholder="VIN" name="vin">
+				</p>
+				<p class="control">
+					<button class="button is-info" type="submit">Adicionar</button>
+				</p>
+			</div>
+		</form>
+		<div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th><abbr title="VIN">VIN</abbr></th>
+						<th><abbr title="Fabricante">Fabricante</abbr></th>
+						<th><abbr title="Modelo">Modelo</abbr></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for car in cars %}
+					<tr>
+						<td><a href="/dados?vin={{ car['vin'] }}">{{ car['vin'] }}</a></td>
+						<td>{{ car['fabricante'] }}</td>
+						<td>{{ car['modelo'] }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+		</div>
+</body>
+
+</html>

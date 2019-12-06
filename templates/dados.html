@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+    <div class="columns is-mobile is-centered">
+		<div class="column is-three-fifths is-offset-one-fifth">
+			<h1 class="title">
+				Dados de seu veículo
+			</h1>
+			<table class="table">
+				<thead>
+					<tr>
+					<th><abbr title="Velocidade">Velocidade</abbr></th>
+					<th><abbr title="RPM">RPM</abbr></th>
+					<th><abbr title="Pressão">Pressão</abbr></th>
+					<th><abbr title="Carga">Carga do motor</abbr></th>
+					<th><abbr title="Temperatura">Temperatura Coolant</abbr></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for dado in dados %}
+						<tr>
+							<td>{{ dado['coolant_temp'] }}</td>
+							<td>{{ dado['rpm'] }}</td>
+							<td>{{ dado['speed'] }}</td>
+							<td>{{ dado['intake_pressure'] }}</td>
+							<td>{{ dado['engine_load'] }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>
