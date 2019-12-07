@@ -46,11 +46,11 @@ while (True):
 			"coolant_temp": 50,
 			"engine_load":100,
 			"intake_pressure": 40,
-			"vin": "3FADP4EK4CM14767"
+			"vin": "3FADP4EK4CM147167"
 		}
 
 		time.sleep(t)
-		r = requests.post(url="http://localhost:3000/dados", json=car_data)
+		r = requests.post(url="http://13.59.120.180/dados", json=car_data)
 
 	except Exception as error:
 		print(error)

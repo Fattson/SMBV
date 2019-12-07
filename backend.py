@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, make_response, render_template, url_for
 import pymysql
 import os
-import obd
-import time
 
 class Database:
     def __init__(self):
@@ -90,4 +88,4 @@ def show_data():
     return render_template('dados.html', dados=dados)
 
 if __name__ == '__main__':
-    app.run(host='localhost', port="3000")
+    app.run(host='0.0.0.0', port="80")
